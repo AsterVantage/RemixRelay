@@ -1,0 +1,122 @@
+﻿Below is a 12-week, two-person “nights-and-weekends” roadmap to get RemixRelay from zero to a public beta. It’s broken into phases, each with concrete deliverables and rough time budgets. Use it as a living backlog—Cursor’s new Agent To-dos feature works great for tracking these tasks inside your editor. (Cursor)
+________________
+
+
+Phase 0 – Lay the rails (Week 0)
+Task
+	Why
+	Lock the scope – finalise MVP outputs: long-form video → ① vertical clip ② tweet/X thread ③ scheduled posting (YouTube + X)
+	Keeps you shipping; everything else is “post-beta.”
+	Form a company & repo – cheap LLC, buy domain, create private GitHub org, wire Cursor to it.
+	One-time legal & infra.
+	Spin up cloud skeleton – Vercel (front-end), Supabase (Postgres + storage), one AWS S3 bucket for raw uploads, and an IAM role for a spot g5.xlarge when you need GPU horsepower.
+	AWS g5.xlarge spot ≈ $0.42/hr; on-demand $1.006/hr. (Vantage)
+	________________
+
+
+Phase 1 – Ingest & Transcribe (Weeks 1-2)
+1. Upload endpoint – presigned-URL POST to S3, webhook back when complete.
+
+2. Audio extraction – FFmpeg strip audio track.
+
+3. Transcription service – hit Whisper v3 API ($0.006/min). (OpenAI)
+
+4. Store transcript & metadata in Supabase; index paragraphs in pgvector.
+
+Deliverable: you can drop a 30-min MP4 and get clean, timestamped text back.
+________________
+
+
+Phase 2 – Highlight Hunter (Weeks 3-4)
+   1. Chunking algorithm – start with 30-sec sliding windows; compute sentence-level embeddings to detect peaks (cosine distance + loudness).
+
+   2. LLM ranking pass – feed top 10 windows + full transcript to GPT-4o (“return top 3 moments with hook copy”). GPT-4o input $2.50/1 M tokens / output $10.00. (OpenAI Community)
+
+   3. Human verify UI – simple React timeline with auto-selected highlights; allow drag to adjust in/out points.
+
+Deliverable: timeline lights up with suggested clips a creator can tweak.
+________________
+
+
+Phase 3 – Clip Forge (Weeks 5-6)
+      1. Vertical cropper – use OpenCV + Face Detection; if no face, smart-zoom on motion ROI.
+
+      2. Brand kit overlay – JSON config (font, colors, logo PNG); FFmpeg overlay, drawtext.
+
+      3. Render pipeline – Node worker that assembles final MP4 + auto-generated thumbnail (stable-diffusion on your spot GPU when online, otherwise DALLE-3 API).
+
+      4. Tweet/X thread writer – GPT-4o with style prompt + brand voice.
+
+Deliverable: hit “Generate” and receive a finished vertical clip, thumbnail, and 5-tweet thread draft.
+________________
+
+
+Phase 4 – Publish & Schedule (Weeks 7-8)
+         1. OAuth flows – YouTube Data v3, X Developer API.
+
+         2. Scheduler – cron-like table; trigger Lambda + retry logic.
+
+         3. Progress dashboard – success/fail, next run, token spend meter.
+
+         4. Usage-based billing stub – Stripe metered-usage product (clip_minutes).
+
+Deliverable: a user can queue tomorrow’s Shorts & thread in one click.
+________________
+
+
+Phase 5 – Private Beta & Feedback Loop (Weeks 9-10)
+            1. Invite 10-20 testers (creator friends, Reddit r/YouTube).
+
+            2. Playback analytics – pull basic view stats; write to clip_performance table.
+
+            3. Retrain ranking – nightly job that rewards previous high-performers; cheap fine-tune or rerank model.
+
+Deliverable: early users see real clips post live and ROI stats trickle back.
+________________
+
+
+Phase 6 – Public Beta & Polish (Weeks 11-12)
+               1. Remove manual GPU toggling – spin up on-demand g5.xlarge when queue > N, else API fallback.
+
+               2. Hardening – rate-limit abuse, DMCA takedown endpoint, terms/privacy page.
+
+               3. Landing page & viral demo – “Upload 60 s, get five assets in 3 min.”
+
+               4. Cursor Marketplace plugin – publish an open-source “Upload to RemixRelay” command; Cursor’s community loves new agents. (Cursor - Community Forum)
+
+Deliverable: anyone can sign up, drop a video, and watch clips auto-publish.
+________________
+
+
+Running this in Cursor
+Cursor trick
+	How to use it
+	Agent To-dos
+	Pop /todo “Implement webhook handler for S3 upload complete” and let Cursor scaffold files + test. (Cursor)
+	Natural-language edits
+	“Rewrite highlight_ranker.py to use cosine similarity from pgvector” – Cursor patches in place. (Cursor)
+	Slack integration
+	Stream build status to your shared Slack; Cursor agents already support this hook.
+	________________
+
+
+Feature backlog (after beta)
+                  1. LinkedIn carousels & Instagram Reels.
+
+                  2. Brand-safe profanity filter & auto-bleep.
+
+                  3. A/B thumbnail generator with multi-arm bandit.
+
+                  4. Revenue-sharing marketplace for third-party remix templates.
+
+________________
+
+
+Reality check
+                     * Cash burn until public beta ≈ $300-$400/mo (API + spot GPU).
+
+                     * Competitors like OpusClip have funding but stop at clip creation; they’re at 10 M users yet still single-purpose. (Business Insider)
+
+                     * Your edge is the full conveyor-belt workflow—ship that, lock in early adopters, and you can layer features while the point-tools chase clips only.
+
+Now crank open Cursor, create the repo, and knock out Phase 0 tonight. Good luck—time to build.

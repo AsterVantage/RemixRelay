@@ -1,0 +1,106 @@
+﻿TL;DR
+If it’s just you and a buddy writing the code nights & weekends, the cash burn can be ridiculously low—on the order of $50-$100 a month while you’re in beta, then scales linearly with user volume. Your real “cost” is sweat and lost Netflix time.
+________________
+
+
+1. Up-front, one-off expenses
+Item
+	Lean route
+	Notes
+	Domain
+	$11.28/yr for a .com from Namecheap (Namecheap)
+	Throw in free WHOIS privacy; done.
+	Apple / Google dev accounts (if you ship a mobile wrapper)
+	$99 / $25
+	Pay later; store listings aren’t needed for a web beta.
+	Misc.
+	$100
+	Optional vanity spend.
+	One-time cash needed: ≈ $50–$250.
+________________
+
+
+2. Monthly burn while you two build & test
+Bucket
+	Shoestring choice
+	Typical spend
+	Compute for AI jobs
+	Option A: pay-as-you-go APIs• Whisper v3 transcription: $0.006/min of audio (OpenAI Community)• GPT-4o prompts: $2.50 / 1 M input tokens, $10 / 1 M output (OpenAI Community)
+	~$40 if you chew through 100 video minutes + 1 M tokens of LLM every month.
+	
+
+	Option B: roll your own OSS stack• Rent a single g5.xlarge GPU @ $1.006/hr (Vantage) only when processing, ~30 hrs/mo
+	$30 (spot pricing) – $120 (on-demand) depending on discipline.
+	Storage (raw uploads + processed clips)
+	S3 standard: $0.023/GB/mo; 100 GB ≈ $2.30
+	Round up to $5 to include egress.
+	Postgres / vector DB / Redis
+	Fly.io hobby tier or Supabase free tier
+	$0 until you need >500 MB.
+	CI/CD, observability
+	GitHub Free, Vercel free, Sentry dev plan
+	$0–$20
+	Misc. SaaS (email, Notion, PostHog, etc.)
+	Stick to free tiers
+	$0–$20
+	Realistic monthly cash outflow: $150–$400
+ (lower end if you throttle GPU/API usage aggressively, upper end if you leave a GPU on 24/7 or start paying for nicer SaaS tiers).
+________________
+
+
+3. Scaling economics once you let users in
+Per-minute cost to you
+Using option A (all-API)
+Step
+	Unit cost
+	Notes
+	Transcribe 1 min audio
+	$0.006
+	Whisper v3 (OpenAI Community)
+	LLM “highlight + copy” pass
+	~ 400 tokens ≈ $0.001 (GPT-4o input+output) (OpenAI Community)
+	
+
+	Thumbnail generation (stable diffusion)
+	Run on the same GPU used for clips — marginal cost near $0.00x
+	
+
+	All-in ≈ $0.01 per video minute.
+ Charge creators $0.04–$0.10 per minute and you keep 75-90 % gross margin.
+When to spin up your own GPU
+Once monthly API bills hit $300-$400, a persistent g5.xlarge at $734/mo (30 days × $1.006) can be cheaper—plus you own latency and privacy. (Vantage)
+At that point bump your plan pricing, drop the API calls, and pocket the spread.
+________________
+
+
+4. Time cost (the part everybody forgets)
+Phase
+	Nights & weekends (≈20 hrs/wk each)
+	Full-time
+	Clickable prototype
+	4–6 weeks
+	2 weeks
+	Alpha (video → Shorts + tweets)
+	8–10 weeks
+	4–5 weeks
+	Polished public beta
+	~4 months from kickoff
+	8–10 weeks
+	Two competent engineers can absolutely ship the v1 in under four calendar months without quitting the day job—provided you’re ruthless about scope (stick to video → vertical clip + tweet thread + auto-post).
+________________
+
+
+5. Hidden land-mines to budget for later
+1. DMCA & content-flagging – if users ingest copyrighted shows, you’ll need an automated takedown flow; a cheap AWS Rekognition SafeSearch call adds ~$0.001 per image.
+
+2. Scaling storage – video adds up; at ~$25/TB/mo you’ll eventually want lifecycle rules (cold storage after 30 days).
+
+3. API roulette – TikTok or YouTube change their upload endpoint? You lose a weekend rewriting OAuth. Keep 10–20 % time buffer for “platform fire drills.”
+
+4. Legal T&Cs & privacy policy – use a template now; pay a lawyer $1–2 k once revenue shows up.
+
+________________
+
+
+Bottom line
+If you and your buddy are the labor, $300–$500 to start and <$400/mo to keep the lights on is totally doable. The beauty of this idea is that costs scale linearly with creator usage—so you don’t need investor cash until you’re ready to pour fuel on customer acquisition. Strap in, keep the scope tight, and your biggest expense will be caffeine.

@@ -1,0 +1,175 @@
+﻿RemixRelay
+White Paper v0.9 — July 2025
+________________
+
+
+1 Executive Summary
+The global creator economy passed $250 billion in 2025 and is still compounding at 20 %+ CAGR. Yet 91 % of creators now say they spend “most of the week” repurposing the same long-form content into shorts, threads, thumbnails and reels. Current AI tools tackle one slice—clipping, captioning or cross-posting—but no one platform automates the entire remix conveyor-belt. RemixRelay fills that gap: upload once, receive platform-native assets, auto-schedule them, and watch performance data feed the next round. (InBeat, Forbes)
+________________
+
+
+2 Market Landscape
+Metric
+	Proof
+	Implication
+	Creator-economy value
+	$250 B today; on track for $528 B by 2030 (InBeat, Forbes)
+	Enormous, still expanding TAM
+	Tool adoption
+	91 % of creators already use Gen-AI in workflow (InBeat)
+	AI tooling is mainstream, but point-solutions dominate
+	Competitor evidence
+	OpusClip hit 10 M users / $20 M ARR in < 24 mo with only clip-making (signalhub.substack.com, arr.club)
+	Shows appetite—and room to up-sell a fuller workflow
+	________________
+
+
+3 Problem Statement
+Creators and social-first teams waste up to ⅔ of production hours on:
+1. Highlight hunting — scrubbing 30-60 min videos for hook moments.
+
+2. Brand-safe styling — resizing, captioning, colour-correcting.
+
+3. Cross-platform formatting — each network’s aspect ratios, length caps, character limits.
+
+4. Manual posting — juggling five different schedulers.
+
+5. Analytics feedback — exporting CSVs, guessing why a clip popped.
+
+No tool today closes all five gaps in a single loop.
+________________
+
+
+4 Solution: RemixRelay
+Pipeline Stage
+	Key Features
+	Native Outputs
+	Smart Ingest
+	Drag-and-drop any video, podcast, blog or repo; Whisper-v3 transcription at $0.006/min for speech (OpenAI Community)
+	Time-stamped transcript
+	Highlight Hunter
+	Hybrid vision-/text model ranks top 3–5 “aha!” moments; user tweakable
+	Suggested clip list
+	Format Forge
+	Auto-generates:• 9∶16 vertical clips w/ auto-reframe• YouTube thumbnail• X/Twitter thread• Instagram caption• LinkedIn carousel JPGs
+	Ready-to-post assets
+	Brand Stylebook
+	One-time upload of fonts, colours, lower-thirds, intro/outro stinger; enforced across all assets
+	On-brand consistency
+	AI Schedule & A/B
+	Predicts best post time; multi-thumb A/B with bandit algorithm
+	Calendar + live variant winner
+	Analytics Loop
+	Pulls view-through, CTR, watch-time, thread expansion; retrains highlight model nightly
+	Self-optimising suggestions
+	________________
+
+
+5 Target Users
+Segment
+	Pain
+	Why they’ll pay
+	Solo creators (YouTubers, Twitch, TikTokers)
+	Editing & repackaging eats creative time
+	$15 – $49/mo beats hiring an editor
+	Micro-agencies & channel managers
+	Client volumes make manual repurposing infeasible
+	Usage-based pricing protects margin
+	Dev-rel & product-led growth teams
+	Need docs videos, code demos, release notes in multi-formats
+	Automates dull doc↔video↔social loop
+	________________
+
+
+6 Technology & Architecture (high-level)
+   * Cursor-first development — pair-programming agents and /todo automation speed feature iteration.
+
+   * Back-end — Node + FastAPI, Supabase (Postgres + pgvector), AWS S3 for raw + rendered media. Spot g5.xlarge GPU (≈$0.42/hr) for vision & diffusion workloads.
+
+   * ML stack —
+
+      * Whisper v3 for ASR (OpenAI)
+
+      * GPT-4o for copy & hook generation ( $2.50 / 1 M input tokens; $10 / 1 M output )
+
+      * Open-source Stable-Diffusion XL for thumbnails (on-GPU)
+
+         * Publishers — OAuth + official APIs for YouTube, X (first), LinkedIn / IG / TikTok (road-map).
+
+         * Security — uploads scanned via AWS Rekognition SafeSearch; SOC-2 alignment planned once ARR > $1 M.
+
+________________
+
+
+7 Differentiation vs. Existing Tools
+| Capability | OpusClip / Vizard | Descript | RemixRelay |
+|---|---|---|
+| Highlight detection | ✅ | ✅ | ✅ + self-learning from analytics |
+| Brand-kit automation | ❌ | ⚠️ limited templates | ✅ full stylebook |
+| Auto cap/crop for every platform | ⚠️ vertical only | ❌ | ✅ vertical + square + 16∶9 |
+| Multi-format text (threads, carousels) | ❌ | ❌ | ✅ |
+| Scheduling & cross-posting | ⚠️ simple export | ❌ | ✅ AI time optimizer |
+| Feedback-driven retrain | ❌ | ❌ | ✅ |
+—No single rival owns the closed loop (create → publish → learn). (Descript, Deliberate Directions)
+________________
+
+
+8 Business Model & Pricing
+Tier
+	Monthly
+	Limits
+	Target
+	Starter
+	Free
+	60 remix credits, watermark
+	Hobbyists
+	Pro
+	$29
+	500 credits, 3 brand kits
+	Growing creators
+	Studio
+	$99
+	5 000 credits, team seats, A/B test
+	Agencies
+	Enterprise
+	Custom
+	Unlimited, on-prem GPU
+	Media networks
+	1 credit = 1 min ingest or 1 derivative asset → Cost ≈ $0.01, gross margin 75-90 %.
+________________
+
+
+9 Roadmap (first 12 months)
+            1. MVP (upload → clip → tweet → schedule) ☑ 12 weeks
+
+            2. LinkedIn carousels & IG Reels
+
+            3. Thumbnail multi-arm bandit
+
+            4. Auto-dub & caption translations
+
+            5. Marketplace for third-party remix templates
+
+            6. API / Zapier connector for no-code automation
+
+________________
+
+
+10 Risks & Mitigations
+Risk
+	Mitigation
+	Platform API changes / bans
+	Abstract posting layer; weekly automated endpoint tests
+	GPU / API cost spikes
+	Fall-back to open-source local models; dynamic routing
+	DMCA & brand-safety liabilities
+	Automated SafeSearch + takedown flow; indemnity caps in ToS
+	Entrant copycats
+	Data network effect (engagement-driven model retrain) + creator brand-kit lock-in
+	________________
+
+
+11 Conclusion
+RemixRelay attacks the highest-friction slice of the creator workflow with a full-stack, brand-safe conveyor-belt. The TAM is vast, paying behaviour is proven, yet competitors remain siloed. With a lean two-founder team, modern AI APIs, and Cursor-accelerated dev-ops, we can launch a public beta in under four months for < $5 k cash burn—well before incumbents glue their point tools together.
+One upload. One dashboard. Infinite remixes.
+ That’s the edge creators—and the market—are waiting for.
