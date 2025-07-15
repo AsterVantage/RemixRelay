@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "remixrelay-backend"
+version = "0.1.0"
+description = "RemixRelay FastAPI backend with Celery workers"
+authors = ["AsterVantage"]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.110.0"
+uvicorn = "^0.27.1"
+celery = "^5.3.6"
+redis = "^5.0.1"
+pydantic = "^2.6.3"
+pydantic-settings = "^2.2.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.2"
+black = "^24.2.0"
+isort = "^5.13.2"
+mypy = "^1.8.0"
+ruff = "^0.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3 
